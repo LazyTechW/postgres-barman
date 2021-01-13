@@ -11,6 +11,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_SSH_SERVERNAME: pg-ssh
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     ports:
@@ -19,8 +20,8 @@ services:
     shm_size: 256MB
     volumes:
     - ./pgSshKeys:/private
-    - ./pgConf/postgresql.conf:/etc/postgres/postgresql.conf
-    - ./pgConf/pg_hba.conf:/etc/postgres/pg_hba.conf
+#    - ./pgConf/postgresql.conf:/etc/postgres/postgresql.conf
+#    - ./pgConf/pg_hba.conf:/etc/postgres/pg_hba.conf
     - ./pgConf/conf.d:/etc/postgres/conf.d
     - ./scripts:/scripts
     - ${pgVolume:-pgVolume}:/var/lib/postgresql/data
@@ -37,6 +38,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_SSH_SERVERNAME: pgb-ssh
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     ports:
@@ -45,8 +47,8 @@ services:
     shm_size: 256MB
     volumes:
     - ./pgSshKeys:/private
-    - ./pgConf/postgresql.conf:/etc/postgres/postgresql.conf
-    - ./pgConf/pg_hba.conf:/etc/postgres/pg_hba.conf
+#    - ./pgConf/postgresql.conf:/etc/postgres/postgresql.conf
+#    - ./pgConf/pg_hba.conf:/etc/postgres/pg_hba.conf
     - ./pgConf/conf.d:/etc/postgres/conf.d
     - ./scripts:/scripts
 #    - ${pgVolume:-pgVolume}:/var/lib/postgresql/data
@@ -65,6 +67,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
+      PG_SERVERS: "pg,pg pgb,pgb"
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     user: root
@@ -72,8 +75,8 @@ services:
     volumes:
     - ./pgpass:/pgpass
     - ./barmanSshKeys:/private
-    - ./barmanConf/barman.conf:/etc/barman.conf
-    - ./barmanConf/barman.d:/etc/barman.d
+#    - ./barmanConf/barman.conf:/etc/barman.conf
+#    - ./barmanConf/barman.d:/etc/barman.d
 #    - ${dbbArchive:-dbbArchive}:/archives
     - ${barmanVolume:-barmanVolume}:/var/lib/barman
 #    entrypoint: tail -f /dev/null

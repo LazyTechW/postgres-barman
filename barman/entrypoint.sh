@@ -10,6 +10,16 @@ echo "Setting ownership/permissions on ${BARMAN_DATA_DIR} and ${BARMAN_LOG_DIR}"
 install -d -m 0700 -o ${BARMAN_USER} -g ${BARMAN_USER} ${BARMAN_DATA_DIR}
 install -d -m 0755 -o ${BARMAN_USER} -g ${BARMAN_USER} ${BARMAN_LOG_DIR}
 
+#---------- barman conf
+
+mkdir -p /etc/barman.d
+for r in $PG_SERVERS
+do
+  export dbHostName=$(echo $r | cut -d ',' -f1)
+  export dbHost=$(echo $r | cut -d ',' -f2)
+  envsubst < /server.tmpl.conf > /etc/barman.d/${dbHostName}.conf
+done
+
 #----- cron
 
 sed -i '/gosu barman/d' /etc/crontabs/root

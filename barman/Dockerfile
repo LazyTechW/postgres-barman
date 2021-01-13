@@ -23,12 +23,14 @@ RUN adduser -D -s /bin/bash barman && \
 ENV \
 #	BARMAN_VERSION=2.10 \
 #	BARMAN_CRON_SRC=/private/cron.d \
-	SSH_HOST_KEY=/private/ssh_host_rsa_key \
+  SSH_HOST_KEY=/private/ssh_host_rsa_key \
   AUTHORIZED_KEYS=/private/authorized_keys \
-	BARMAN_DATA_DIR=/var/lib/barman \
-	BARMAN_LOG_DIR=/var/log/barman \
+  BARMAN_DATA_DIR=/var/lib/barman \
+  BARMAN_LOG_DIR=/var/log/barman \
 #	BARMAN_SSH_KEY_DIR=/private/ssh \
 #	BARMAN_PGPASSFILE=/private/pgpass \
+  # PG_SERVERS must be seperated by space
+  PG_SERVERS="" \
   BARMAN_CRON_SCHEDULE="* * * * *" \
   BARMAN_BACKUP_SCHEDULE="0 4 * * *" \
   BARMAN_LOG_LEVEL=INFO \
@@ -52,10 +54,14 @@ ENTRYPOINT [ "/entrypoint.sh" ]
 COPY entrypoint.sh /
 COPY afterDbUp.sh /usr/local/bin/
 COPY functions.sh /usr/local/bin/
+COPY barman.conf /etc/barman.conf
+
 COPY supervisord.tmpl.conf /
+COPY server.tmpl.conf /
 
 ADD https://raw.githubusercontent.com/eficode/wait-for/master/wait-for /wait-for
 RUN chmod a+x /wait-for /usr/local/bin/*.sh
 
 # Reference
 # https://github.com/ubc/barman-docker/blob/master/Dockerfile
+
