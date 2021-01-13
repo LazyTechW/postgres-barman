@@ -5,13 +5,13 @@ services:
   # This is for backup restore, by disabling posgres service.
   pg:
     environment:
-      RESTORE_MODE: yes
+      RESTORE_MODE: "yes"
 #    volumes:
 #    - ./backupConf/supervisord.conf:/etc/supervisord.conf
 
   pgb:
     environment:
-      RESTORE_MODE: yes
+      RESTORE_MODE: "yes"
 #    volumes:
 #    - ./backupConf/supervisord.conf:/etc/supervisord.conf
 
