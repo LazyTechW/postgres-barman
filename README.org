@@ -1,36 +1,35 @@
 
 * Intro
 
-A postgres container with barman streaming and rsync/ssh support.
+This repo includes two Docker builds:
 
-* Configuration
+- A postgres container with barman streaming and rsync/ssh support.
+- A barman container with sshd.
 
-Refer: https://github.com/tbeadle/postgres/blob/master/barman/image-pre-start.d/01_update_postgresql.conf.sh
+In the examples, it shows the following features:
 
-#+BEGIN_SRC bash
-if major_gte 9.6; then
-	WAL_LEVEL="replica"
-else
-	WAL_LEVEL="hot_standby"
-fi
+- The barman container can backup more than one postgres servers.
+- Both streaming and rsync/ssh strateties are supported.
 
-cat >>${PGDATA}/postgresql.conf <<EOF
-wal_level = '${WAL_LEVEL}'
-max_wal_senders = 2
-EOF
+* How to run the example
 
-if major_gte 9.4 ; then
-cat >>${PGDATA}/postgresql.conf <<EOF
-max_replication_slots = 2
-EOF
-#+END_SRC
+- Run buildBoth.bat (windows only) to build both images from 'barman' and 'postgres'.
+- cd examples, and run `docker-compose up -d`
 
-* Postgres
-
-** Update config
+If you want to restore, cp the docker-compose.or.yaml to docker-compose.override.yaml to bring postgres container into recovery mode:
 
 #+BEGIN_SRC bash
-docker-entrypoint.sh 
+cd examples
+docker-compose down
+cp docker-compose.or.yaml docker-compose.override.yaml
+docker-compose up
 #+END_SRC
+
+* Issues and PR's are hotly welcomed!
+
+* Previous artworks
+
+https://github.com/tbeadle/postgres/blob/master/barman/image-pre-start.d/01_update_postgresql.conf.sh
+
 
 
