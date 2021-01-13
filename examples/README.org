@@ -1,0 +1,31 @@
+
+* Generate ssh keys
+
+Go to pgSshKeys and barmanSshKeys, execute:
+
+#+BEGIN_SRC bash
+ssh-keygen -f ./ssh_host_rsa_key -q -N ""
+#+END_SRC
+
+Then copy the content of ssh_host_rsa_key.pub to each other's authorized_keys.
+
+* Restore
+
+#+BEGIN_SRC bash
+docker-compose down
+mv pgData pgData.bak
+
+cp docker-compose.or.yaml docker-compose.override.yaml
+docker-compose up
+
+docker-compose exec barman bash
+# Find the backup id
+barman list-backup ssh
+
+barman recover ssh BACKUP_ID /var/lib/postgresql/data --remote-ssh-command 'ssh postgres@pg'
+# Or PITR
+gosu barman barman recover ssh latest /var/lib/postgresql/data --target-time "2021-01-07 10:45:00" --remote-ssh-command 'ssh postgres@pg'
+exit
+
+docker-compose up -d
+#+END_SRC

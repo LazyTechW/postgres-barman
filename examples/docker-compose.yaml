@@ -1,0 +1,107 @@
+version: '3.6'
+
+services:
+
+  pg:
+#    image: postgres:alpine
+    image: postgres-barman
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${pgPass}
+      POSTGRES_USER: postgres
+      POSTGRES_DB: ${pgDb}
+      # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_PASSWORD: ${barmanPass}
+      STREAMING_PASSWORD: ${barmanStreamPass}
+    ports:
+    - 55432:5432
+    user: root
+    shm_size: 256MB
+    volumes:
+    - ./pgSshKeys:/private
+    - ./pgConf/postgresql.conf:/etc/postgres/postgresql.conf
+    - ./pgConf/pg_hba.conf:/etc/postgres/pg_hba.conf
+    - ./pgConf/conf.d:/etc/postgres/conf.d
+    - ./scripts:/scripts
+    - ${pgVolume:-pgVolume}:/var/lib/postgresql/data
+#    entrypoint: tail -f /dev/null
+    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
+    networks:
+      default:
+
+  pgb:
+    image: postgres-barman
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${pgPass}
+      POSTGRES_USER: postgres
+      POSTGRES_DB: ${pgDb}
+      # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_PASSWORD: ${barmanPass}
+      STREAMING_PASSWORD: ${barmanStreamPass}
+    ports:
+    - 55433:5432
+    user: root
+    shm_size: 256MB
+    volumes:
+    - ./pgSshKeys:/private
+    - ./pgConf/postgresql.conf:/etc/postgres/postgresql.conf
+    - ./pgConf/pg_hba.conf:/etc/postgres/pg_hba.conf
+    - ./pgConf/conf.d:/etc/postgres/conf.d
+    - ./scripts:/scripts
+#    - ${pgVolume:-pgVolume}:/var/lib/postgresql/data
+#    entrypoint: tail -f /dev/null
+    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
+    networks:
+      default:
+
+  barman:
+    image: barman-docker
+    restart: unless-stopped
+    depends_on:
+    - pg
+    environment:
+      POSTGRES_PASSWORD: ${pgPass}
+      POSTGRES_USER: postgres
+      POSTGRES_DB: ${pgDb}
+      # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_PASSWORD: ${barmanPass}
+      STREAMING_PASSWORD: ${barmanStreamPass}
+    user: root
+    shm_size: 256MB
+    volumes:
+    - ./pgpass:/pgpass
+    - ./barmanSshKeys:/private
+    - ./barmanConf/barman.conf:/etc/barman.conf
+    - ./barmanConf/barman.d:/etc/barman.d
+#    - ${dbbArchive:-dbbArchive}:/archives
+    - ${barmanVolume:-barmanVolume}:/var/lib/barman
+#    entrypoint: tail -f /dev/null
+    entrypoint: "/entrypoint.sh"
+#    entrypoint: "sh -c '/wait-for pg:5432 -- /entrypoint.sh'"
+#    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
+    networks:
+      default:
+
+  dbtool:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    ports:
+    - 65001:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@test.com
+      PGADMIN_DEFAULT_PASSWORD: ${pgadminPass}
+    volumes:
+    - ${pgadminData:-pgadminData}:/var/lib/pgadmin
+    networks:
+      default:
+
+networks:
+  default:
+
+volumes:
+  pgVolume:
+  pgArchive:
+  barmanVolume:
+  pgadminData:
+

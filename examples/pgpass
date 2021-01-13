@@ -1,0 +1,4 @@
+pg:5432:*:barman:${BARMAN_PASSWORD}
+pg:5432:*:streaming_barman:${STREAMING_PASSWORD}
+pgb:5432:*:barman:${BARMAN_PASSWORD}
+pgb:5432:*:streaming_barman:${STREAMING_PASSWORD}

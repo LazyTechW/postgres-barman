@@ -1,0 +1,16 @@
+version: '3.6'
+
+services:
+
+  # This is for backup restore, by disabling posgres service.
+  pg:
+    volumes:
+    - ./backupConf/supervisord.conf:/etc/supervisord.conf
+
+  pgb:
+    volumes:
+    - ./backupConf/supervisord.conf:/etc/supervisord.conf
+
+
+#  barman:
+#    entrypoint: "/entrypoint.sh noCheck"

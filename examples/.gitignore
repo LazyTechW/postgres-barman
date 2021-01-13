@@ -1,0 +1,7 @@
+pgData
+barmanData
+pgadminData
+
+*.bak
+
+docker-compose.override.yaml
