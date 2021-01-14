@@ -26,11 +26,24 @@ ssh-keygen -f ./ssh_host_rsa_key -q -N ""
 
 Then copy the content of ssh_host_rsa_key.pub to each other's authorized_keys.
 
+## Add credential to pgpass
+
+In the pgpass file, add the corresponding pg credentials.
+
+## Set environment
+
+```yaml
+  # Format: dbHostName,dbHost. dbHostName is used to specify the name for barman, dbHost is used to connect to the db.
+  PG_SERVERS: "pg,pg pgb,pgb"
+  BARMAN_PASSWORD: ${barmanPass}
+  STREAMING_PASSWORD: ${barmanStreamPass}
+```
+
 ## Backup
 
 There is a cron job to back up all with a schedule like "0 4 * * *". You may change it by set the variable in docker-compose:
 
-#+BEGIN_SRC yaml
+``` yaml
 environment:
   BARMAN_BACKUP_SCHEDULE: "0 4 * * *"
 ```
