@@ -4,7 +4,7 @@ services:
 
   pg:
 #    image: postgres:alpine
-    image: postgres-barman
+    image: lazytechw/postgres-barman:v12.2
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${pgPass}
@@ -29,7 +29,7 @@ services:
       default:
 
   pgb:
-    image: postgres-barman
+    image: lazytechw/postgres-barman:v12.2
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${pgPass}
@@ -56,8 +56,10 @@ services:
       default:
 
   barman:
-    image: barman-docker
+    image: lazytechw/barman-docker:v12.2
     restart: unless-stopped
+    ports:
+    - 9780:9780
     depends_on:
     - pg
     environment:

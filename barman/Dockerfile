@@ -43,7 +43,7 @@ ENV \
 #  BARMAN_BACKUP_METHOD=postgres \
   BARMAN_EXPORTER_SCHEDULE="*/5 * * * *" \
   BARMAN_EXPORTER_LISTEN_ADDRESS="0.0.0.0" \
-  BARMAN_EXPORTER_LISTEN_PORT=9780 \
+#  BARMAN_EXPORTER_LISTEN_PORT=9780 \
   BARMAN_EXPORTER_CACHE_TIME=3600
 VOLUME ${BARMAN_DATA_DIR}
 VOLUME ${BARMAN_LOG_DIR}
@@ -61,6 +61,8 @@ COPY server.tmpl.conf /
 
 ADD https://raw.githubusercontent.com/eficode/wait-for/master/wait-for /wait-for
 RUN chmod a+x /wait-for /usr/local/bin/*.sh /*.sh
+
+EXPOSE 9780
 
 # Reference
 # https://github.com/ubc/barman-docker/blob/master/Dockerfile
