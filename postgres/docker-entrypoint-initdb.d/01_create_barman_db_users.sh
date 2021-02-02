@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eo pipefail
+# set -eo pipefail
 
 function add_user {
 	local user=${!1}
@@ -22,12 +22,39 @@ function add_user {
 	fi
 
 	echo "Running ${cmd}"
-	psql -c "${cmd/<password>/${pw//\'/\'\'}}"
+	psql -U postgres -c "${cmd/<password>/${pw//\'/\'\'}}"
 
 	echo "Adding ${user} to pg_hba.conf"
+        sed -i '/^host ${db} ${user}/d' ${PGDATA}/pg_hba.conf
 	echo "host ${db} ${user} 0.0.0.0/0 ${auth}" >> ${PGDATA}/pg_hba.conf
 	echo "host ${db} ${user} ::/0 ${auth}" >> ${PGDATA}/pg_hba.conf
 }
 
+function update_user {
+	local user=${!1}
+	local pw=${!2}
+	local db=${3}
+	local options="${4}"
+
+	echo "Update ${user} user in database."
+	local cmd="ALTER USER ${user} WITH ${options}"
+	local auth
+	if [[ -n ${pw} ]]; then
+		cmd+=" ENCRYPTED PASSWORD '<password>'"
+		auth="md5"
+		echo "Be sure to add the following to the .pgpass file on the barman server:"
+		echo "$(hostname):${PGPORT:-5432}:${PGDATABASE}:${user}:<password>"
+	else
+		auth="trust"
+		echo "${user} is being created without any password!!!"
+	fi
+
+	echo "Running ${cmd}"
+	psql -U postgres -c "${cmd/<password>/${pw//\'/\'\'}}"
+}
+
 add_user BARMAN_USER BARMAN_PASSWORD all SUPERUSER
 add_user STREAMING_USER STREAMING_PASSWORD replication REPLICATION
+
+update_user BARMAN_USER BARMAN_PASSWORD all SUPERUSER
+update_user STREAMING_USER STREAMING_PASSWORD replication REPLICATION
