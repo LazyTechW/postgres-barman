@@ -8,7 +8,8 @@ services:
 install:
   - docker build -t lazytechw/postgres-barman:v12.2 ./postgres
   - docker build -t lazytechw/barman-docker:v12.2 ./barman
-  - cd examples ; docker-compose up -d
+  - cd examples
+  - docker-compose up -d
 
 # before_script:
 #   - pip install -r requirements.txt
@@ -17,5 +18,5 @@ install:
 #   - pip install feedparser
 
 script:
-  - cd examples ; docker-compose exec -T pg psql -c "SELECT version()" -U barman postgres
+  - docker-compose exec -T pg psql -c "SELECT version()" -U barman postgres
 #  - python tests.py
