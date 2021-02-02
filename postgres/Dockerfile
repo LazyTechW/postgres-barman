@@ -20,6 +20,7 @@ RUN install -d -m 0700 -o postgres -g postgres ~postgres/.ssh && \
 ENV \
     SSH_HOST_KEY=/private/ssh_host_rsa_key \
     AUTHORIZED_KEYS=/private/authorized_keys \
+# This is important, used in archive_command and restore_command.
     BARMAN_SSH_SERVERNAME=ssh \
     BARMAN_USER=barman \
     BARMAN_PASSWORD= \
@@ -39,6 +40,7 @@ COPY entrypoint.sh /
 COPY docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
 # COPY image-entrypoint-initdb.d /image-entrypoint-initdb.d/
 # COPY image-pre-start.d /image-pre-start.d
+RUN chmod a+x /usr/local/bin/*.sh /*.sh
 
 # Reference:
 # https://github.com/tbeadle/postgres/blob/master/barman/Dockerfile-9.6
