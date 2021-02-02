@@ -17,6 +17,7 @@ for r in $PG_SERVERS
 do
   export dbHostName=$(echo $r | cut -d ',' -f1)
   export dbHost=$(echo $r | cut -d ',' -f2)
+  export sshPort=$(echo $r | cut -d ',' -f3)
   envsubst < /server.tmpl.conf > /etc/barman.d/${dbHostName}.conf
 done
 

@@ -1,0 +1,21 @@
+language: python
+python:
+  - 2.7
+
+services:
+  - docker
+
+install:
+  - docker build -t lazytechw/postgres-barman:v12.2 ./postgres
+  - docker build -t lazytechw/barman-docker:v12.2 ./barman
+  - cd examples ; docker-compose up -d
+
+# before_script:
+#   - pip install -r requirements.txt
+#   - pip install mock
+#   - pip install requests
+#   - pip install feedparser
+
+script:
+  - cd examples ; docker-compose exec -T pg psql -c "SELECT version()" -U barman postgres
+#  - python tests.py
