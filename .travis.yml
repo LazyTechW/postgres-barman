@@ -18,5 +18,7 @@ install:
 #   - pip install feedparser
 
 script:
+  - docker-compose ps
+  - sleep 10
   - docker-compose exec -T pg psql -c "SELECT version()" -U barman postgres
 #  - python tests.py
