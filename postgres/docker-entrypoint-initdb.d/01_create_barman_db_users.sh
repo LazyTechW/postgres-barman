@@ -31,9 +31,10 @@ function add_user {
 	psql -U postgres -c "${cmd/<password>/${pw//\'/\'\'}}"
 
 	echo "Adding ${user} to pg_hba.conf"
-        sed -i '/^host ${db} ${user}/d' $pg_hba
-	echo "host ${db} ${user} 0.0.0.0/0 ${auth}" >> $pg_hba
-	echo "host ${db} ${user} ::/0 ${auth}" >> $pg_hba
+        # When pg_hba file is mounted from Docker, sed -i will not work since it changes the node id.
+        # sed -i '/^host ${db} ${user}/d' $pg_hba
+	grep -F "host ${db} ${user} 0.0.0.0/0 ${auth}" $pg_hba || echo "host ${db} ${user} 0.0.0.0/0 ${auth}" >> $pg_hba
+	grep -F "host ${db} ${user} ::/0 ${auth}" $pg_hba || echo "host ${db} ${user} ::/0 ${auth}" >> $pg_hba
 }
 
 function update_user {
