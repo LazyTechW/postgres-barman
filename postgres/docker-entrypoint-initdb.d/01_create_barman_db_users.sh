@@ -2,12 +2,18 @@
 
 # set -eo pipefail
 
+pg_hba=${PGDATA}/pg_hba.conf
+if [[ -n "$PG_HBA_FILE" ]]; then
+  pg_hba=${PG_HBA_FILE}
+fi
+
 function add_user {
 	local user=${!1}
 	local pw=${!2}
 	local db=${3}
 	local options="${4}"
 
+        echo "====="
 	echo "Creating ${user} user in database."
 	local cmd="CREATE USER ${user} WITH ${options}"
 	local auth
@@ -25,9 +31,9 @@ function add_user {
 	psql -U postgres -c "${cmd/<password>/${pw//\'/\'\'}}"
 
 	echo "Adding ${user} to pg_hba.conf"
-        sed -i '/^host ${db} ${user}/d' ${PGDATA}/pg_hba.conf
-	echo "host ${db} ${user} 0.0.0.0/0 ${auth}" >> ${PGDATA}/pg_hba.conf
-	echo "host ${db} ${user} ::/0 ${auth}" >> ${PGDATA}/pg_hba.conf
+        sed -i '/^host ${db} ${user}/d' $pg_hba
+	echo "host ${db} ${user} 0.0.0.0/0 ${auth}" >> $pg_hba
+	echo "host ${db} ${user} ::/0 ${auth}" >> $pg_hba
 }
 
 function update_user {
@@ -36,6 +42,7 @@ function update_user {
 	local db=${3}
 	local options="${4}"
 
+        echo "====="
 	echo "Update ${user} user in database."
 	local cmd="ALTER USER ${user} WITH ${options}"
 	local auth
