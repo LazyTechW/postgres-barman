@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
-      BARMAN_SSH_SERVERNAME: pg-ssh
+      BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pg-ssh}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     ports:
@@ -24,7 +24,8 @@ services:
     - ./scripts:/scripts
     - ${pgVolume:-pgVolume}:/var/lib/postgresql/data
 #    entrypoint: tail -f /dev/null
-    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
+# Don't set postgres.conf and pg_hba.conf other than the version in $PGDATA. Append config to /etc/postgres/conf.d instead.
+#    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
     networks:
       default:
 
@@ -36,7 +37,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
-      BARMAN_SSH_SERVERNAME: pgb-ssh
+      BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pgb-ssh}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     ports:
@@ -51,7 +52,7 @@ services:
     - ./scripts:/scripts
     - ${pgbVolume:-pgbVolume}:/var/lib/postgresql/data
 #    entrypoint: tail -f /dev/null
-    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
+#    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
     networks:
       default:
 

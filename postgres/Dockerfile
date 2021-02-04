@@ -33,14 +33,18 @@ VOLUME /var/log/supervisor
 COPY functions.sh /usr/local/bin/
 COPY supervisord.conf /etc/
 COPY supervisord-pg.conf /etc/
+
+# /etc/postgres
 RUN mkdir -p /etc/postgres/
 COPY postgresql.conf /etc/postgres/
-COPY pg_hba.conf /etc/postgres/
+# COPY pg_hba.conf /etc/postgres/
+
 COPY entrypoint.sh /
 COPY docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
 # COPY image-entrypoint-initdb.d /image-entrypoint-initdb.d/
 # COPY image-pre-start.d /image-pre-start.d
 RUN chmod a+x /usr/local/bin/*.sh /*.sh
+RUN dos2unix /usr/local/bin/*.sh /*.sh
 
 # Reference:
 # https://github.com/tbeadle/postgres/blob/master/barman/Dockerfile-9.6

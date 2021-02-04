@@ -5,7 +5,7 @@ set -eo pipefail
 . /usr/local/bin/functions.sh
 
 echo "Creating replication slot 'barman'"
-psql -U postgres -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_create_physical_replication_slot('barman');"
+psql -U postgres -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_create_physical_replication_slot('barman');" || echo Ignore error.
 
 # if not verlt ${PG_MAJOR} 9.4; then
 #   if [[ -n ${BARMAN_SLOT_NAME} ]]; then

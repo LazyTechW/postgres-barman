@@ -3,9 +3,9 @@
 # set -eo pipefail
 
 pg_hba=${PGDATA}/pg_hba.conf
-if [[ -n "$PG_HBA_FILE" ]]; then
-  pg_hba=${PG_HBA_FILE}
-fi
+# if [[ -n "$PG_HBA_FILE" ]]; then
+#   pg_hba=${PG_HBA_FILE}
+# fi
 
 function add_user {
 	local user=${!1}

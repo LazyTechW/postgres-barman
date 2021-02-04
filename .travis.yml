@@ -10,6 +10,7 @@ install:
   - docker build -t lazytechw/barman-docker:v12.2 ./barman
   - cd examples
   - docker-compose up -d
+  - bash execDockerInit.sh
 
 # before_script:
 #   - pip install -r requirements.txt
@@ -18,7 +19,5 @@ install:
 #   - pip install feedparser
 
 script:
-  - docker-compose ps
-  - sleep 10
-  - docker-compose exec -T pg psql -c "SELECT version()" -U barman postgres
+  - bash test.sh
 #  - python tests.py
