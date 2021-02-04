@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -v
+
 servers="pg pgb"
 for i in $servers
 do
