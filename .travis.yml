@@ -16,6 +16,7 @@ jobs:
     script:
     - cd examples
     - docker-compose up -d
+    - sleep 10
     - bash execDockerInit.sh
     - bash test.sh
 

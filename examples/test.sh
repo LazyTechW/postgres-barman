@@ -3,19 +3,18 @@
 set -v
 
 docker-compose ps
-sleep 20
 docker-compose exec -T pg psql -c "SELECT version()" -U barman postgres
 docker-compose exec -T pgb psql -c "SELECT version()" -U barman postgres
 
-sleep 10
 docker-compose exec -T barman gosu barman barman switch-xlog all
 sleep 5
-docker-compose exec -T barman gosu barman barman check all | grep -vF FAILED
+docker-compose exec -T barman gosu barman barman check all | grep -vF FAILED &> /dev/null
 
 docker-compose exec -T barman gosu barman barman backup all
 docker-compose exec -T barman gosu barman barman list-backup all
 docker-compose exec -T barman gosu barman tail -n 100 /var/log/barman/barman.log
 
+# docker-compose exec -T barman echo \$PG_SERVERS
 docker-compose exec -T barman ls /etc/barman.d/
 docker-compose exec -T barman cat /etc/barman.d/pg.conf
 docker-compose exec -T barman cat /etc/barman.d/pgb.conf
