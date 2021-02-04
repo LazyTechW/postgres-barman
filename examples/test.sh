@@ -6,9 +6,9 @@ docker-compose ps
 docker-compose exec -T pg psql -c "SELECT version()" -U barman postgres
 docker-compose exec -T pgb psql -c "SELECT version()" -U barman postgres
 
-docker-compose exec -T barman gosu barman barman switch-xlog all
+docker-compose exec -T barman gosu barman barman switch-xlog --force --archive --archive-timeout 30 all
 
-sleep 10
+sleep 30
 
 # Barman check
 docker-compose exec -T barman gosu barman barman check all
