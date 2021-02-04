@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ev
+set -v
 
 docker-compose ps
 sleep 20
