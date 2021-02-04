@@ -16,6 +16,7 @@ docker-compose exec -T barman gosu barman barman backup all
 docker-compose exec -T barman gosu barman barman list-backup all
 docker-compose exec -T barman gosu barman tail -n 100 /var/log/barman/barman.log
 
+docker-compose exec -T barman ls /etc/barman.d/
 docker-compose exec -T barman cat /etc/barman.d/pg.conf
 docker-compose exec -T barman cat /etc/barman.d/pgb.conf
 
