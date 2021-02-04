@@ -62,6 +62,8 @@ function configure_ssh {
 		echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 		sed -i '/^ChallengeResponseAuthentication[[:space:]]/ d' /etc/ssh/sshd_config
 		echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config
+		sed -i '/^PermitRootLogin[[:space:]]/ d' /etc/ssh/sshd_config
+		echo "PermitRootLogin no" >> /etc/ssh/sshd_config
 
     chmod 700 $user_home/.ssh
     # -R

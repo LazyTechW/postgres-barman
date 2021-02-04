@@ -1,4 +1,6 @@
 
+<img src="https://travis-ci.com/LazyTechW/postgres-barman.svg?branch=v12.2" />
+
 # Intro
 
 This repo includes two Docker builds:

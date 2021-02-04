@@ -4,14 +4,14 @@ services:
 
   pg:
 #    image: postgres:alpine
-    image: postgres-barman
+    image: lazytechw/postgres-barman:v12.2
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${pgPass}
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
-      BARMAN_SSH_SERVERNAME: pg-ssh
+      BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pg-ssh}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     ports:
@@ -24,19 +24,20 @@ services:
     - ./scripts:/scripts
     - ${pgVolume:-pgVolume}:/var/lib/postgresql/data
 #    entrypoint: tail -f /dev/null
-    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
+# Don't set postgres.conf and pg_hba.conf other than the version in $PGDATA. Append config to /etc/postgres/conf.d instead.
+#    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
     networks:
       default:
 
   pgb:
-    image: postgres-barman
+    image: lazytechw/postgres-barman:v12.2
     restart: unless-stopped
     environment:
       POSTGRES_PASSWORD: ${pgPass}
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
-      BARMAN_SSH_SERVERNAME: pgb-ssh
+      BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pgb-ssh}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     ports:
@@ -51,21 +52,22 @@ services:
     - ./scripts:/scripts
     - ${pgbVolume:-pgbVolume}:/var/lib/postgresql/data
 #    entrypoint: tail -f /dev/null
-    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
+#    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
     networks:
       default:
 
   barman:
-    image: barman-docker
+    image: lazytechw/barman-docker:v12.2
     restart: unless-stopped
+    ports:
+    - 9780:9780
     depends_on:
     - pg
     environment:
-      POSTGRES_PASSWORD: ${pgPass}
-      POSTGRES_USER: postgres
-      POSTGRES_DB: ${pgDb}
-      # PGDATA: The default is /var/lib/postgresql/data.
-      PG_SERVERS: "pg,pg pgb,pgb"
+#      POSTGRES_PASSWORD: ${pgPass}
+#      POSTGRES_USER: postgres
+#      POSTGRES_DB: ${pgDb}
+      PG_SERVERS: ${pgServers}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     user: root
@@ -73,14 +75,10 @@ services:
     volumes:
     - ./pgpass:/pgpass
     - ./barmanSshKeys:/private
-#    - ./barmanConf/barman.conf:/etc/barman.conf
-#    - ./barmanConf/barman.d:/etc/barman.d
-#    - ${dbbArchive:-dbbArchive}:/archives
     - ${barmanVolume:-barmanVolume}:/var/lib/barman
 #    entrypoint: tail -f /dev/null
     entrypoint: "/entrypoint.sh"
 #    entrypoint: "sh -c '/wait-for pg:5432 -- /entrypoint.sh'"
-#    command: -c 'config_file=/etc/postgres/postgresql.conf' -c 'hba_file=/etc/postgres/pg_hba.conf'
     networks:
       default:
 
