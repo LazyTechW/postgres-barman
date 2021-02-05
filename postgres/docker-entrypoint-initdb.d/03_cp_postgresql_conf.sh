@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Override existing config.
-cp /etc/postgres/postgresql.conf $PGDATA/
+cp /etc/postgres/postgresql.tmpl.conf $PGDATA/
