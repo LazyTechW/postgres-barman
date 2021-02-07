@@ -22,6 +22,7 @@ ENV \
     AUTHORIZED_KEYS=/private/authorized_keys \
 # This is important, used in archive_command and restore_command.
     BARMAN_SSH_HOST=barman \
+    BARMAN_SSH_PORT=22 \
     BARMAN_SSH_SERVERNAME=ssh \
     BARMAN_USER=barman \
     BARMAN_PASSWORD= \

@@ -5,8 +5,9 @@ set -v
 docker-compose ps
 docker-compose exec -T pg psql -c "SELECT version()" -U barman postgres
 docker-compose exec -T pgb psql -c "SELECT version()" -U barman postgres
-docker-compose exec -T pg gosu postgres ssh barman@barman -C true
-docker-compose exec -T pgb gosu postgres ssh barman@barman -C true
+# Here test the barman alias defined in ~/.ssh/config
+docker-compose exec -T pg gosu postgres ssh barman -C true
+docker-compose exec -T pgb gosu postgres ssh barman -C true
 docker-compose exec -T barman gosu barman ssh postgres@pg -C true
 docker-compose exec -T barman gosu barman ssh postgres@pgb -C true
 
