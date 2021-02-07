@@ -23,7 +23,8 @@ docker-compose exec -T barman ls /etc/barman.d/
 docker-compose exec -T barman cat /etc/barman.d/pg.conf
 docker-compose exec -T barman cat /etc/barman.d/pgb.conf
 
-for i in pg, pgb; do
+for i in pg pgb
+do
 
 # Backup
 docker-compose exec -T barman gosu barman barman backup $i-streaming
