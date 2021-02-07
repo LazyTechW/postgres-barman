@@ -9,8 +9,8 @@ source /usr/local/bin/functions.sh
 #----- Generate pg conf
 cat > /etc/postgres/archive.conf <<-EOF
 archive_mode = on
-archive_command = 'barman-wal-archive barman ${BARMAN_SSH_SERVERNAME} %p'
-restore_command = 'barman-wal-restore barman ${BARMAN_SSH_SERVERNAME} %f %p'
+archive_command = 'barman-wal-archive ${BARMAN_SSH_HOST} ${BARMAN_SSH_SERVERNAME} %p'
+restore_command = 'barman-wal-restore -P ${BARMAN_SSH_HOST} ${BARMAN_SSH_SERVERNAME} %f %p'
 EOF
 
 configure_ssh postgres

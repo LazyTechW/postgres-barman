@@ -59,7 +59,8 @@ COPY barman.conf /etc/barman.conf
 COPY supervisord.tmpl.conf /
 COPY server.tmpl.conf /
 
-ADD https://raw.githubusercontent.com/eficode/wait-for/master/wait-for /wait-for
+# ADD https://raw.githubusercontent.com/eficode/wait-for/master/wait-for /wait-for
+COPY wait-for /wait-for
 RUN chmod a+x /wait-for /usr/local/bin/*.sh /*.sh
 
 EXPOSE 9780

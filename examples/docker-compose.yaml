@@ -11,6 +11,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_SSH_HOST: ${BARMAN_SSH_HOST:-barman}
       BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pg-ssh}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
@@ -37,6 +38,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_SSH_HOST: ${BARMAN_SSH_HOST:-barman}
       BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pgb-ssh}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
