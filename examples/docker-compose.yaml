@@ -13,7 +13,8 @@ services:
       # PGDATA: The default is /var/lib/postgresql/data.
       BARMAN_SSH_HOST: ${BARMAN_SSH_HOST:-barman}
       BARMAN_SSH_PORT: ${BARMAN_SSH_PORT:-22}
-      BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pg-streaming}
+      # Here it's used by archiver_command, so we'd better use ssh not streaming.
+      BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pg-ssh}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     ports:
@@ -41,7 +42,7 @@ services:
       # PGDATA: The default is /var/lib/postgresql/data.
       BARMAN_SSH_HOST: ${BARMAN_SSH_HOST:-barman}
       BARMAN_SSH_PORT: ${BARMAN_SSH_PORT:-22}
-      BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pgb-streaming}
+      BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pgb-ssh}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     ports:
