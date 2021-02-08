@@ -74,6 +74,7 @@ services:
       PG_SERVERS: ${pgServers}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
+      BARMAN_RETENTION_POLICY: ${barmanRetentionPolicy:-REDUNDANCY 1}
     user: root
     shm_size: 256MB
     volumes:

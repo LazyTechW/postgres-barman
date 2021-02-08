@@ -12,6 +12,8 @@ install -d -m 0755 -o ${BARMAN_USER} -g ${BARMAN_USER} ${BARMAN_LOG_DIR}
 
 #---------- barman conf
 
+envsubst </barman.tmpl.conf >/etc/barman.conf
+
 mkdir -p /etc/barman.d
 for r in $PG_SERVERS
 do
