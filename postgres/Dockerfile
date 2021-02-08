@@ -21,6 +21,8 @@ ENV \
     SSH_HOST_KEY=/private/ssh_host_rsa_key \
     AUTHORIZED_KEYS=/private/authorized_keys \
 # This is important, used in archive_command and restore_command.
+    BARMAN_SSH_HOST=barman \
+    BARMAN_SSH_PORT=22 \
     BARMAN_SSH_SERVERNAME=ssh \
     BARMAN_USER=barman \
     BARMAN_PASSWORD= \
@@ -36,7 +38,7 @@ COPY supervisord-pg.conf /etc/
 
 # /etc/postgres
 RUN mkdir -p /etc/postgres/
-COPY postgresql.conf /etc/postgres/
+COPY postgresql.tmpl.conf /etc/postgres/
 # COPY pg_hba.conf /etc/postgres/
 
 COPY entrypoint.sh /

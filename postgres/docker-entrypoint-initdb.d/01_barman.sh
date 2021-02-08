@@ -2,10 +2,11 @@
 
 # set -eo pipefail
 
+. /usr/local/bin/functions.sh
+
+#---------- Create barman users
+
 pg_hba=${PGDATA}/pg_hba.conf
-# if [[ -n "$PG_HBA_FILE" ]]; then
-#   pg_hba=${PG_HBA_FILE}
-# fi
 
 function add_user {
 	local user=${!1}
@@ -66,3 +67,23 @@ add_user STREAMING_USER STREAMING_PASSWORD replication REPLICATION
 
 update_user BARMAN_USER BARMAN_PASSWORD all SUPERUSER
 update_user STREAMING_USER STREAMING_PASSWORD replication REPLICATION
+
+#---------- Create replication slot
+
+echo "Creating replication slot 'barman'"
+psql -U postgres -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_create_physical_replication_slot('barman');" || echo Ignore error.
+
+# if not verlt ${PG_MAJOR} 9.4; then
+#   if [[ -n ${BARMAN_SLOT_NAME} ]]; then
+#     echo "Creating replication slot ${BARMAN_SLOT_NAME} for barman."
+#     psql -v ON_ERROR_STOP=1 -c "SELECT * FROM pg_create_physical_replication_slot('${BARMAN_SLOT_NAME//\'/\'\'}');"
+#   else
+#     echo "BARMAN_SLOT_NAME is empty; not creating replication slot."
+#   fi
+# fi
+
+#---------- Copy postgresql conf
+
+# Override existing config.
+cp /etc/postgres/postgresql.tmpl.conf $PGDATA/postgresql.conf
+

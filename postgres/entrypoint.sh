@@ -7,10 +7,23 @@ chown postgres:postgres $PGDATA
 source /usr/local/bin/functions.sh
 
 #----- Generate pg conf
+
+cat > /var/lib/postgresql/.ssh/config <<-EOF
+Host *
+  CheckHostIP no
+  StrictHostKeyChecking no
+Host barman
+  HostName ${BARMAN_SSH_HOST}
+  Port ${BARMAN_SSH_PORT}
+  User barman
+EOF
+chmod 600 /var/lib/postgresql/.ssh/config
+chown postgres:postgres /var/lib/postgresql/.ssh/config
+
 cat > /etc/postgres/archive.conf <<-EOF
 archive_mode = on
 archive_command = 'barman-wal-archive barman ${BARMAN_SSH_SERVERNAME} %p'
-restore_command = 'barman-wal-restore barman ${BARMAN_SSH_SERVERNAME} %f %p'
+restore_command = 'barman-wal-restore -P barman ${BARMAN_SSH_SERVERNAME} %f %p'
 EOF
 
 configure_ssh postgres

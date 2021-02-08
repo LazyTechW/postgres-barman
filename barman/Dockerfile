@@ -41,6 +41,7 @@ ENV \
   STREAMING_PASSWORD=standby \
 #  BARMAN_SLOT_NAME=barman \
 #  BARMAN_BACKUP_METHOD=postgres \
+  BARMAN_RETENTION_POLICY="REDUNDANCY 1" \
   BARMAN_EXPORTER_SCHEDULE="*/5 * * * *" \
   BARMAN_EXPORTER_LISTEN_ADDRESS="0.0.0.0" \
 #  BARMAN_EXPORTER_LISTEN_PORT=9780 \
@@ -54,12 +55,13 @@ ENTRYPOINT [ "/entrypoint.sh" ]
 COPY entrypoint.sh /
 COPY afterDbUp.sh /usr/local/bin/
 COPY functions.sh /usr/local/bin/
-COPY barman.conf /etc/barman.conf
+COPY barman.tmpl.conf /
 
 COPY supervisord.tmpl.conf /
 COPY server.tmpl.conf /
 
-ADD https://raw.githubusercontent.com/eficode/wait-for/master/wait-for /wait-for
+# ADD https://raw.githubusercontent.com/eficode/wait-for/master/wait-for /wait-for
+COPY wait-for /wait-for
 RUN chmod a+x /wait-for /usr/local/bin/*.sh /*.sh
 
 EXPOSE 9780

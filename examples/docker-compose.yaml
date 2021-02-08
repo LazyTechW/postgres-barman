@@ -11,6 +11,9 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_SSH_HOST: ${BARMAN_SSH_HOST:-barman}
+      BARMAN_SSH_PORT: ${BARMAN_SSH_PORT:-22}
+      # Here it's used by archiver_command, so we'd better use ssh not streaming.
       BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pg-ssh}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
@@ -37,6 +40,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_SSH_HOST: ${BARMAN_SSH_HOST:-barman}
+      BARMAN_SSH_PORT: ${BARMAN_SSH_PORT:-22}
       BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pgb-ssh}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
@@ -70,6 +75,7 @@ services:
       PG_SERVERS: ${pgServers}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
+      BARMAN_RETENTION_POLICY: ${barmanRetentionPolicy:-REDUNDANCY 1}
     user: root
     shm_size: 256MB
     volumes:
