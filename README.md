@@ -85,6 +85,21 @@ exit
 docker-compose up -d
 ```
 
+# Configure
+
+## SSH and Streaming
+
+By default only streaming is used.
+
+To disable or enable ssh or streaming, set the environment variables accordingly:
+
+```
+# Disable streaming
+BARMAN_STREAM_ON=0
+# Enable ssh
+BARMAN_SSH_ON=1
+```
+
 # Issues and PR's are hotly welcomed!
 
 # Previous artworks

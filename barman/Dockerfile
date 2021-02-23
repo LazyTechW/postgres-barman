@@ -33,6 +33,8 @@ ENV \
   PG_SERVERS="" \
   BARMAN_CRON_SCHEDULE="* * * * *" \
   BARMAN_BACKUP_SCHEDULE="0 4 * * *" \
+  BARMAN_STREAM_ON=1 \
+  BARMAN_SSH_ON=0 \
   BARMAN_LOG_LEVEL=INFO \
   BARMAN_USER=barman \
   BARMAN_PASSWORD=postgres \
@@ -52,17 +54,18 @@ VOLUME ${BARMAN_LOG_DIR}
 # ENTRYPOINT [ "sh -c '/wait-for pg:5432 -- /entrypoint.sh'" ]
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-COPY entrypoint.sh /
-COPY afterDbUp.sh /usr/local/bin/
-COPY functions.sh /usr/local/bin/
-COPY barman.tmpl.conf /
-
-COPY supervisord.tmpl.conf /
-COPY server.tmpl.conf /
+COPY afterDbUp.sh functions.sh /usr/local/bin/
+COPY entrypoint.sh\
+ barman.tmpl.conf\
+ supervisord.tmpl.conf\
+ server.tmpl.conf\
+ server-ssh.tmpl.conf\
+ wait-for /
 
 # ADD https://raw.githubusercontent.com/eficode/wait-for/master/wait-for /wait-for
-COPY wait-for /wait-for
+# COPY wait-for /wait-for
 RUN chmod a+x /wait-for /usr/local/bin/*.sh /*.sh
+RUN dos2unix /wait-for /usr/local/bin/*.sh /*.sh
 
 EXPOSE 9780
 

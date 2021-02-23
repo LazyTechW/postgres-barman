@@ -20,11 +20,18 @@ EOF
 chmod 600 /var/lib/postgresql/.ssh/config
 chown postgres:postgres /var/lib/postgresql/.ssh/config
 
+# archive_command can only be run on SSH not STREAMING.
+if [[ "${BARMAN_SSH_ON}" == "1" ]]; then
 cat > /etc/postgres/archive.conf <<-EOF
 archive_mode = on
 archive_command = 'barman-wal-archive barman ${BARMAN_SSH_SERVERNAME} %p'
 restore_command = 'barman-wal-restore -P barman ${BARMAN_SSH_SERVERNAME} %f %p'
 EOF
+else
+cat > /etc/postgres/archive.conf <<-EOF
+archive_mode = off
+EOF
+fi
 
 configure_ssh postgres
 

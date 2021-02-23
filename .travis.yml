@@ -9,14 +9,11 @@ install: skip
 
 jobs:
   include:
-  - stage: Build
-    script: docker build -t lazytechw/postgres-barman:v12.2 ./postgres
-  - script: docker build -t lazytechw/barman-docker:v12.2 ./barman
   - stage: Test
     script:
+    - docker build -t lazytechw/postgres-barman:v12.2 ./postgres
+    - docker build -t lazytechw/barman-docker:v12.2 ./barman
     - cd examples
-    - docker-compose up -d
-    - sleep 10
-    - bash execDockerInit.sh
     - bash test.sh
+    - bash test.sh 1
 

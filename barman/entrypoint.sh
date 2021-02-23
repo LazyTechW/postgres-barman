@@ -20,7 +20,8 @@ do
   export dbHostName=$(echo $r | cut -d ',' -f1)
   export dbHost=$(echo $r | cut -d ',' -f2)
   export sshPort=$(echo $r | cut -d ',' -f3)
-  envsubst < /server.tmpl.conf > /etc/barman.d/${dbHostName}.conf
+  [[ "${BARMAN_STREAM_ON:-1}" == "1" ]] && envsubst < /server.tmpl.conf > /etc/barman.d/${dbHostName}.conf
+  [[ "${BARMAN_SSH_ON:-0}" == "1" ]] && envsubst < /server-ssh.tmpl.conf > /etc/barman.d/${dbHostName}-ssh.conf
 done
 
 #----- cron

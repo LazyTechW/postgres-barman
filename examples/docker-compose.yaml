@@ -11,10 +11,12 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_SSH_ON: ${BARMAN_SSH_ON:-0}
       BARMAN_SSH_HOST: ${BARMAN_SSH_HOST:-barman}
       BARMAN_SSH_PORT: ${BARMAN_SSH_PORT:-22}
       # Here it's used by archiver_command, so we'd better use ssh not streaming.
       BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pg-ssh}
+      BARMAN_STREAM_SERVERNAME: ${BARMAN_STREAM_SERVERNAME:-pg-streaming}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     ports:
@@ -40,9 +42,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: ${pgDb}
       # PGDATA: The default is /var/lib/postgresql/data.
+      BARMAN_SSH_ON: ${BARMAN_SSH_ON:-0}
       BARMAN_SSH_HOST: ${BARMAN_SSH_HOST:-barman}
       BARMAN_SSH_PORT: ${BARMAN_SSH_PORT:-22}
       BARMAN_SSH_SERVERNAME: ${BARMAN_SSH_SERVERNAME:-pgb-ssh}
+      BARMAN_STREAM_SERVERNAME: ${BARMAN_STREAM_SERVERNAME:-pgb-streaming}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
     ports:
@@ -51,8 +55,6 @@ services:
     shm_size: 256MB
     volumes:
     - ./pgSshKeys:/private
-#    - ./pgConf/postgresql.conf:/etc/postgres/postgresql.conf
-#    - ./pgConf/pg_hba.conf:/etc/postgres/pg_hba.conf
     - ./pgConf/conf.d:/etc/postgres/conf.d
     - ./scripts:/scripts
     - ${pgbVolume:-pgbVolume}:/var/lib/postgresql/data
@@ -69,10 +71,8 @@ services:
     depends_on:
     - pg
     environment:
-#      POSTGRES_PASSWORD: ${pgPass}
-#      POSTGRES_USER: postgres
-#      POSTGRES_DB: ${pgDb}
       PG_SERVERS: ${pgServers}
+      BARMAN_SSH_ON: ${BARMAN_SSH_ON:-0}
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
       BARMAN_RETENTION_POLICY: ${barmanRetentionPolicy:-REDUNDANCY 1}
@@ -83,7 +83,7 @@ services:
     - ./barmanSshKeys:/private
     - ${barmanVolume:-barmanVolume}:/var/lib/barman
 #    entrypoint: tail -f /dev/null
-    entrypoint: "/entrypoint.sh"
+#    entrypoint: "/entrypoint.sh"
 #    entrypoint: "sh -c '/wait-for pg:5432 -- /entrypoint.sh'"
     networks:
       default:
@@ -107,7 +107,6 @@ networks:
 volumes:
   pgVolume:
   pgbVolume:
-  pgArchive:
   barmanVolume:
   pgadminData:
 
