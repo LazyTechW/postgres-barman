@@ -31,6 +31,8 @@ ENV \
 #	BARMAN_PGPASSFILE=/private/pgpass \
   # PG_SERVERS must be seperated by space
   PG_SERVERS="" \
+  BARMAN_PARALLEL_JOBS=1 \
+  BARMAN_COMPRESSION=gzip \
   BARMAN_CRON_SCHEDULE="* * * * *" \
   BARMAN_BACKUP_SCHEDULE="0 4 * * *" \
   BARMAN_STREAM_ON=1 \
@@ -66,6 +68,9 @@ COPY entrypoint.sh\
 # COPY wait-for /wait-for
 RUN chmod a+x /wait-for /usr/local/bin/*.sh /*.sh
 RUN dos2unix /wait-for /usr/local/bin/*.sh /*.sh
+
+#----- Manually install the latest barman_exporter
+ADD https://raw.githubusercontent.com/ahes/prometheus-barman-exporter/master/barman_exporter/barman_exporter.py /
 
 EXPOSE 9780
 
