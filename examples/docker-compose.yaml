@@ -76,6 +76,8 @@ services:
       BARMAN_PASSWORD: ${barmanPass}
       STREAMING_PASSWORD: ${barmanStreamPass}
       BARMAN_RETENTION_POLICY: ${barmanRetentionPolicy:-REDUNDANCY 1}
+    # This is important for get-wal and barman-wal-restore
+    hostname: barman
     user: root
     shm_size: 256MB
     volumes:

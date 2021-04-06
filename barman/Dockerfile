@@ -34,6 +34,7 @@ ENV \
   BARMAN_PARALLEL_JOBS=1 \
   BARMAN_COMPRESSION=gzip \
   BARMAN_CRON_SCHEDULE="* * * * *" \
+# Note: you must apply tzinfo here. For example, the following setting will run backup at 12pm at UTF+8.
   BARMAN_BACKUP_SCHEDULE="0 4 * * *" \
   BARMAN_STREAM_ON=1 \
   BARMAN_SSH_ON=0 \
