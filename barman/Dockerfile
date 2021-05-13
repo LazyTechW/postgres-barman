@@ -9,7 +9,7 @@ RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositor
     gettext \
     gosu \
     supervisor \
-  && pip3 install barman-exporter
+  && pip3 install barman barman-exporter
 
 # For wait-for
 #     netcat-openbsd \
