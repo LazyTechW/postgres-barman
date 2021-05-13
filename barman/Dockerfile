@@ -50,7 +50,8 @@ ENV \
   BARMAN_EXPORTER_SCHEDULE="*/5 * * * *" \
   BARMAN_EXPORTER_LISTEN_ADDRESS="0.0.0.0" \
 #  BARMAN_EXPORTER_LISTEN_PORT=9780 \
-  BARMAN_EXPORTER_CACHE_TIME=3600
+  # Default: 3600 is too long for the monitoring task.
+  BARMAN_EXPORTER_CACHE_TIME=15
 VOLUME ${BARMAN_DATA_DIR}
 VOLUME ${BARMAN_LOG_DIR}
 
@@ -71,7 +72,9 @@ RUN chmod a+x /wait-for /usr/local/bin/*.sh /*.sh
 RUN dos2unix /wait-for /usr/local/bin/*.sh /*.sh
 
 #----- Manually install the latest barman_exporter
-ADD https://raw.githubusercontent.com/ahes/prometheus-barman-exporter/master/barman_exporter/barman_exporter.py /
+# ADD https://raw.githubusercontent.com/ahes/prometheus-barman-exporter/master/barman_exporter/barman_exporter.py /
+# Use silencej version to fix the cache-time bug: https://github.com/ahes/prometheus-barman-exporter/issues/15
+ADD https://raw.githubusercontent.com/silencej/prometheus-barman-exporter/master/barman_exporter/barman_exporter.py /
 
 EXPOSE 9780
 
