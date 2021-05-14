@@ -15,5 +15,5 @@ jobs:
     - docker build -t lazytechw/barman-docker:v12.2 ./barman
     - cd examples
     - bash test.sh
-    - bash test.sh 1
+#    - bash test.sh 1
 

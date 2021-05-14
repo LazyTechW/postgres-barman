@@ -18,6 +18,8 @@ In the examples, it shows the following features:
 - Run buildBoth.bat (windows only) to build both images from 'barman' and 'postgres'.
 - cd examples, and run `docker-compose up -d`
 
+*You may check examples/test.sh to find out how to use.*
+
 ## Generate ssh keys
 
 Go to pgSshKeys and barmanSshKeys, execute:
@@ -74,12 +76,12 @@ docker-compose up
 ``` bash
 docker-compose exec barman bash
 # Find the backup id
-barman list-backup ssh
+barman list-backup pg-streaming
 
 # barman recover SERVER_NAME BACKUP_ID /var/lib/postgresql/data --remote-ssh-command 'ssh postgres@pg'
-barman recover pg-ssh latest /var/lib/postgresql/data --remote-ssh-command 'ssh postgres@pg'
+gosu barman barman recover pg-streaming latest /var/lib/postgresql/data --remote-ssh-command 'ssh postgres@pg'
 # Or PITR
-gosu barman barman recover ssh latest /var/lib/postgresql/data --target-time "2021-01-07 10:45:00" --remote-ssh-command 'ssh postgres@pg'
+gosu barman barman recover pg-streaming latest /var/lib/postgresql/data --target-time "2021-01-07 10:45:00" --remote-ssh-command 'ssh postgres@pg'
 exit
 
 docker-compose up -d
@@ -88,6 +90,8 @@ docker-compose up -d
 # Configure
 
 ## SSH and Streaming
+
+**WARNING**: now streaming is the recommended way, and thus ssh is not tested in the travis any more. But PR is still welcomed.
 
 By default only streaming is used.
 
